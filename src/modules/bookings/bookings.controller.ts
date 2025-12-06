@@ -20,7 +20,7 @@ const createBooking = async (req: Request, res: Response) => {
 
         if (result === false) {
 
-            return res.status(200).json(
+            return res.status(400).json(
                 {
                     success: true,
                     message: "End date must be grater than start date",
@@ -29,7 +29,7 @@ const createBooking = async (req: Request, res: Response) => {
         }
         if (result === "invalidDate") {
 
-            return res.status(200).json(
+            return res.status(400).json(
                 {
                     success: true,
                     message: "Start date must be grater than to day",
@@ -46,7 +46,7 @@ const createBooking = async (req: Request, res: Response) => {
             }
         )
     } catch (error: any) {
-        return res.status(400).json(
+        return res.status(500).json(
             {
                 success: false,
                 message: error.message
@@ -57,13 +57,17 @@ const createBooking = async (req: Request, res: Response) => {
 
 const getBookings = async (req: Request, res: Response) => {
     try {
+        const id = req.user!.id;
+        const role = req.user!.role;
 
-        const result = await bookingsService.getBookings()
+        console.log(id)
+        
+        const result = await bookingsService.getBookings(role, id)
 
-        if (result.length === 0) {
+        if (result?.length===0) {
             return res.status(404).json({
                 success: false,
-                message: "No data found"
+                message: "No Booking data found"
             })
         }
         return res.status(200).json({
@@ -84,14 +88,31 @@ const getBookings = async (req: Request, res: Response) => {
 
 const updateBookings = async (req: Request, res: Response) => {
     try {
-        const result = await bookingsService.updateBookings(req.params.bookingId as string);
-        return res.status(200).json({
-            success:false,
-            message:" ",
-            data: result
+        const result = await bookingsService.updateBookings(req.user!.id as string, req.params.bookingId as string, req.body.status);
+
+        if(result===true){
+            return res.status(400).json({
+            success:true,
+            message:"You can cancel booking before start date only",
+            error: "Cancellation date must be before start date"
         })
-    } catch (error) {
+        }
+
         
+        return res.status(200).json({
+            success:true,
+            message:"Booking cancelled successfully",
+            data: result.rows[0]
+        })
+
+
+    } catch (error:any) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: error.message
+            }
+        )
     }
 }
 

@@ -34,35 +34,44 @@ const getAllUsers = async (req: Request, res: Response) => {
 }
 
 const updateUser = async (req: Request, res: Response) => {
+
+    console.log(req.user)
     try {
-        const id = req.params.userId as string;
-
-    const result = await userServices.updateUser(req.body, id);
 
 
-    if (result.rows.length === 0) {
-        return res.status(400).json(
-            {
-                success: false,
-                message: "Something went wrong"
-            }
-        )
-    }
+        let id = req.params.userId as string;
 
-    return res.status(200).json(
-        {
-            success: true,
-            message: "User updated successfully",
-            data:result.rows[0]
+        if (req.user!.role === 'customer') {
+            id = req.user!.id
         }
-    )
-    } catch (error:any) {
+
+        const result = await userServices.updateUser(req.body, id);
+
+
+        if (result.rows.length === 0) {
             return res.status(400).json(
                 {
-                    success:true,
-                    messge: error.message
+                    success: false,
+                    message: "User not found",
+                    error: "Invalid Id"
                 }
             )
+        }
+
+        return res.status(200).json(
+            {
+                success: true,
+                message: "User updated successfully",
+                data: result.rows[0]
+            }
+        )
+    } catch (error: any) {
+        return res.status(400).json(
+            {
+                success: true,
+                messge: error.message
+            }
+        )
     }
 
 
@@ -71,24 +80,35 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     try {
         const result = await userServices.deleteUser(req.params.userId as string)
-        if(result.rowCount === 0){
+
+        if (result === false) {
+
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: "User Has a active booking"
+                }
+            )
+
+        }
+        if (result.rowCount === 0) {
             return res.status(400).json({
-                success:false,
-                message:"Some thing went wrong"
+                success: false,
+                message: "Some thing went wrong"
             })
         }
 
         return res.status(200).json(
             {
-                success:true,
-                message:"User deleted successfully"
+                success: true,
+                message: "User deleted successfully"
             }
         )
-    } catch (error:any) {
-        res.status(400).json(
+    } catch (error: any) {
+        res.status(500).json(
             {
-                success:false,
-                message: error.message
+                success: false,
+                message: "Internal Server errors"
             }
         )
     }

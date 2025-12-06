@@ -13,7 +13,7 @@ const addNewVehicle = async (payload: Record<string, unknown>) => {
     } = payload;
 
 
-    const result = pool.query(
+    const result = await pool.query(
         `INSERT INTO vehicles
         (vehicle_name,
         type,

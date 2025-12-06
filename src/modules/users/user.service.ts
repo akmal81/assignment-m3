@@ -7,7 +7,8 @@ const getAllUsers = async () => {
     return result
 }
 
-const updateUser = async (payload: Record<string, unknown>, id:string) => {
+const updateUser = async (payload: Record<string, unknown>, id: string) => {
+
     const { name, email, phone, role } = payload;
     const result = await pool.query(`
         UPDATE users 
@@ -16,12 +17,19 @@ const updateUser = async (payload: Record<string, unknown>, id:string) => {
         RETURNING  id, name, email, phone, role
         `, [name, email, phone, role, id])
 
-        return result
+    return result
 }
 
 
-const deleteUser = async (id:string) => {
-    const result= pool.query(`DELETE FROM users WHERE id = $1`,[id])
+const deleteUser = async (id: string) => {
+
+    const checkActiveBooking = await pool.query(`SELECT status FROM bookings WHERE customer_id= $1`, [id])
+
+    if (checkActiveBooking.rows.length > 0) {
+        return false
+    }
+
+    const result = pool.query(`DELETE FROM users WHERE id = $1`, [id])
     return result;
 }
 export const userServices = {

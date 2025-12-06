@@ -11,37 +11,52 @@ const totalDayCalculator = (startDate: string, endDate: string, price: number) =
     const newEndDate = new Date(endDate)
 
     const today = new Date()
-    
-    if (newStartDate < today){
+
+    if (newStartDate < today) {
         return "invalidDate"
     }
 
     const dateValidation = (newEndDate.getTime() - newStartDate.getTime())
-    
-    if(dateValidation < 0){
+
+    if (dateValidation < 0) {
         return null
     }
     const totalDays: number = (newEndDate.getTime() - newStartDate.getTime()) / (1000 * 60 * 60 * 24);
-   const totalPrice:number = totalDays * price
+    const totalPrice: number = totalDays * price
     return totalPrice
 }
 
-const vehicleStatus = async (id:string) =>{
+const vehicleStatus = async (id: string) => {
     const result = await pool.query(
-        `SELECT vehicle_name, daily_rent_price, availability_status FROM vehicles WHERE id = $1`,[id]
+        `SELECT vehicle_name, daily_rent_price, availability_status FROM vehicles WHERE id = $1`, [id]
     )
 
-    if(result.rows[0].availability_status==='booked'){
+    if (result.rows[0].availability_status === 'booked') {
         return null
     }
     return result;
 }
 
-const updateVehecleStatus = async (id:string) => {
-    await pool.query(`UPDATE vehicles SET availability_status = $1 WHERE id =$2`,["booked", id]);
+const updateVehecleStatus = async (id: string) => {
+    await pool.query(`UPDATE vehicles SET availability_status = $1 WHERE id =$2`, ["booked", id]);
     return
 }
 
+
+const checkBookingStartDate = async (userId: string, bookingId: string) => {
+    const result = await pool.query(`
+            SELECT rent_start_date FROM bookings WHERE customer_id =$1 AND id = $2
+        `, [userId, bookingId]);
+
+    const startDate = new Date(result.rows[0].rent_start_date)
+    const cancelDate = new Date();
+
+    if (cancelDate.getDate() >= startDate.getDate()) {
+        return true
+    }
+    return
+
+}
 
 // select customur 
 
@@ -51,5 +66,6 @@ export const utility = {
     totalDayCalculator,
     vehicleStatus,
     updateVehecleStatus,
-   
+    checkBookingStartDate
+
 }

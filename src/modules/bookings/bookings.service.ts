@@ -9,6 +9,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
     if (vehicleInfo === null) {
         return null
     }
+
+
     const daily_rent_price = vehicleInfo?.rows[0]?.daily_rent_price;
 
     const vehicle_name = vehicleInfo?.rows[0]?.vehicle_name;
@@ -51,9 +53,10 @@ const createBooking = async (payload: Record<string, unknown>) => {
 }
 
 
-const getBookings = async () => {
+const getBookings = async (role:string, id:string) => {
 
-    const booking = await pool.query(`
+    if (role === "admin") {
+        const booking = await pool.query(`
         SELECT 
         b.*, 
         c.name, 
@@ -83,10 +86,46 @@ const getBookings = async () => {
         }
     }))
     return retult
+    }
+    if (role === "customer") {
+        const booking = await pool.query(`
+        SELECT 
+        b.*, 
+        v.vehicle_name,
+        v.registration_number,
+        v.type
+        FROM bookings b 
+        INNER JOIN vehicles v ON b.vehicle_id = v.id
+        WHERE b.customer_id = $1
+        `,[id])
+    const retult = booking.rows.map(row => ({
+        id: row.id,
+        customer_id: row.customer_id,
+        vehicle_id: row.vehicle_id,
+        rent_start_date: row.rent_start_date,
+        rent_end_date: row.rent_end_date,
+        total_price: row.total_price,
+        status: row.status,
+        vehicle: {
+            vehicle_name: row.vehicle_name,
+            registration_number: row.registration_number
+        }
+    }))
+    return retult
+    }
 }
 
-const updateBookings = async (id:string) => {
-    return id
+
+
+const updateBookings = async (userId:string, bookingId: string, status: string) => {
+
+    const dateChecker = await utility.checkBookingStartDate(userId, bookingId)
+        
+    if (dateChecker === true) {
+        return true
+    }
+    const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id = $2 AND customer_id =$3 RETURNING *`,[status, bookingId, userId])
+    return result
 }
 
 export const bookingsService = {

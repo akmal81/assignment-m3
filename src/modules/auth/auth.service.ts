@@ -16,9 +16,8 @@ const singUpNewUser = async (payload: Record<string, unknown>) => {
 }
 
 const singinUser = async (email: string, password: string) => {
-    console.log(password)
+    
     const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
-    console.log(result)
     const user = result.rows[0];
     if (result.rows.length === 0) {
         return null;
@@ -31,6 +30,7 @@ const singinUser = async (email: string, password: string) => {
 
     const token = jwt.sign(
         {
+            id: user.id,
             name: user.name,
             email: user.email,
             role: user.role
@@ -39,7 +39,7 @@ const singinUser = async (email: string, password: string) => {
     )
 
     delete user.password;
-    return {token, user}
+    return { token, user }
 
 }
 

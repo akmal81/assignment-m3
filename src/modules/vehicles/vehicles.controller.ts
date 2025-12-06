@@ -15,6 +15,8 @@ const addNewVehicle = async (req: Request, res: Response) => {
             )
         }
 
+        
+
         const result = await vehiclesService.addNewVehicle(req.body)
 
         return res.status(201).json(
@@ -77,7 +79,8 @@ const viewSingleVehicle = async (req: Request, res: Response) => {
             return res.status(401).json(
                 {
                     success: false,
-                    message: "No Vehicles found"
+                    message: "No Vehicles found",
+                    error:"Vehicle id not found"
                 }
             )
         }
@@ -94,7 +97,8 @@ const viewSingleVehicle = async (req: Request, res: Response) => {
         return res.status(400).json(
             {
                 success: false,
-                message: error.message
+                message:"Some thing went wrong!!",
+                error: error.message
             }
         )
     }
@@ -120,7 +124,7 @@ const updateVehicle = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Vehicle updated successfully",
-                data: result.rows
+                data: result.rows[0]
             }
         )
 
@@ -147,7 +151,8 @@ const deleteVehicle = async (req: Request, res: Response) => {
             return res.status(400).json(
                 {
                     success: false,
-                    message: "Somethisn went wrong"
+                    message: "Vehicles not found!!",
+                    error:"Invalid input"
                 }
             )
         }
@@ -162,7 +167,8 @@ const deleteVehicle = async (req: Request, res: Response) => {
         return res.status(400).json(
             {
                 success: false,
-                message: error.message
+                message: "Some thing went wrong",
+                error:error.message
             }
         )
     }
