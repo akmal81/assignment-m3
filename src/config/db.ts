@@ -26,7 +26,7 @@ const initDb = async () => {
             id SERIAL PRIMARY KEY,
             vehicle_name VARCHAR(100) NOT NULL,
             type VARCHAR(10),
-            registration_number VARCHAR(20) NOT NULL, 
+            registration_number VARCHAR(100) UNIQUE NOT NULL, 
             daily_rent_price INT,
             availability_status VARCHAR(20)
         )
@@ -39,14 +39,15 @@ const initDb = async () => {
             id SERIAL PRIMARY KEY,
             customer_id INT REFERENCES users(id),
             vehicle_id INT REFERENCES vehicles(id),
-            rent_start_date DATE NOT NULL,
-            rent_end_date DATE NOT NULL,
+            rent_start_date VARCHAR(100),
+            rent_end_date VARCHAR(100),
             total_price INT NOT NULL,
             status VARCHAR(20),
             CONSTRAINT start_end_date CHECK ( rent_start_date < rent_end_date)
         )
         `
     )
+
 };
 
 export default initDb
