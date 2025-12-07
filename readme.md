@@ -78,10 +78,10 @@ npm run dev
 ---
 
 
-## 📜 Live Testing email and password
+#### 📜 Live Testing email and password
 ---
 
-__User Credential__
+__Admin Credential__
 ```
 {
 "email": "admin@gmail.com",
@@ -98,25 +98,25 @@ __User Credential__
 ---
 
 
-## 📌 Author
+##### 📌 Author
 **Akmal Hossain**  
 Front-end Developer | React | Node.js | PostgreSQL
 
 ---
 
-## 📞 Contact
+##### 📞 Contact
 - Email: akmalforu@gmail.com 
 - GitHub: https://github.com/akmal81 
 - LinkedIn: https://www.linkedin.com/in/akmalhossain/ 
 
 ---
 
-## 📜 License
+##### 📜 License
 This project is licensed under the **MIT License** — feel free to use it however you want.
 
 ---
 
-## ⭐ Support
+##### ⭐ Support
 If you found this project helpful, please give it a **star** ⭐ on GitHub!
 
 ---
