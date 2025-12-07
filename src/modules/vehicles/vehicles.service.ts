@@ -81,6 +81,13 @@ const updateVehicle = async (payload: Record<string, unknown>, id: string) => {
 
 
 const deleteVehicle = async (id:string) => {
+
+    const checkActiveBooking = await pool.query(`SELECT status FROM bookings WHERE vehicle_id= $1`, [id])
+
+    if (checkActiveBooking.rows.length > 0) {
+        return true
+    }
+
     const result = await pool.query(
         `DELETE FROM vehicles WHERE id=$1`, [id]
     )

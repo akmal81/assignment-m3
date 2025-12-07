@@ -53,7 +53,7 @@ const createBooking = async (payload: Record<string, unknown>) => {
 }
 
 
-const getBookings = async (role:string, id:string) => {
+const getBookings = async (role: string, id: string) => {
 
     if (role === "admin") {
         const booking = await pool.query(`
@@ -68,24 +68,24 @@ const getBookings = async (role:string, id:string) => {
         INNER JOIN users c ON b.customer_id = c.id
         INNER JOIN vehicles v ON b.customer_id = v.id
         `)
-    const retult = booking.rows.map(row => ({
-        id: row.id,
-        customer_id: row.customer_id,
-        vehicle_id: row.vehicle_id,
-        rent_start_date: row.rent_start_date,
-        rent_end_date: row.rent_end_date,
-        total_price: row.total_price,
-        status: row.status,
-        customer: {
-            name: row.name,
-            email: row.email
-        },
-        vehicle: {
-            vehicle_name: row.vehicle_name,
-            registration_number: row.registration_number
-        }
-    }))
-    return retult
+        const retult = booking.rows.map(row => ({
+            id: row.id,
+            customer_id: row.customer_id,
+            vehicle_id: row.vehicle_id,
+            rent_start_date: row.rent_start_date,
+            rent_end_date: row.rent_end_date,
+            total_price: row.total_price,
+            status: row.status,
+            customer: {
+                name: row.name,
+                email: row.email
+            },
+            vehicle: {
+                vehicle_name: row.vehicle_name,
+                registration_number: row.registration_number
+            }
+        }))
+        return retult
     }
     if (role === "customer") {
         const booking = await pool.query(`
@@ -97,35 +97,78 @@ const getBookings = async (role:string, id:string) => {
         FROM bookings b 
         INNER JOIN vehicles v ON b.vehicle_id = v.id
         WHERE b.customer_id = $1
-        `,[id])
-    const retult = booking.rows.map(row => ({
-        id: row.id,
-        customer_id: row.customer_id,
-        vehicle_id: row.vehicle_id,
-        rent_start_date: row.rent_start_date,
-        rent_end_date: row.rent_end_date,
-        total_price: row.total_price,
-        status: row.status,
-        vehicle: {
-            vehicle_name: row.vehicle_name,
-            registration_number: row.registration_number
-        }
-    }))
-    return retult
+        `, [id])
+        const retult = booking.rows.map(row => ({
+            id: row.id,
+            customer_id: row.customer_id,
+            vehicle_id: row.vehicle_id,
+            rent_start_date: row.rent_start_date,
+            rent_end_date: row.rent_end_date,
+            total_price: row.total_price,
+            status: row.status,
+            vehicle: {
+                vehicle_name: row.vehicle_name,
+                registration_number: row.registration_number
+            }
+        }))
+        return retult
     }
 }
 
 
 
-const updateBookings = async (userId:string, bookingId: string, status: string) => {
+const updateBookings = async (userId: string, bookingId: string, status: string, role: string) => {
 
-    const dateChecker = await utility.checkBookingStartDate(userId, bookingId)
+if (status !== "cancelled" && role === "customer") {
+
+return false
+}
+    
+    if (role === 'customer' && status==="cancelled") {
         
-    if (dateChecker === true) {
-        return true
+        const dateChecker = await utility.checkBookingStartDate(userId, bookingId)
+        
+        if (dateChecker === true) {
+            return true
+        }
+        const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id = $2 AND customer_id =$3 RETURNING *`, [status, bookingId, userId])
+        // update vehicle availability_status
+        const vehicleId = result.rows[0].vehicle_id 
+        const availabilityStatus = "available"
+        await pool.query(`UPDATE vehicles SET availability_status=$1 WHERE id = $2 RETURNING *`, [availabilityStatus, vehicleId]);
+        
+        
+        return result
     }
-    const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id = $2 AND customer_id =$3 RETURNING *`,[status, bookingId, userId])
-    return result
+
+    if (role === 'admin' && status === "returned") {
+
+        const updateVehicleStatus = await pool.query(`UPDATE bookings SET status=$1 WHERE id = $2 RETURNING *`, [status, bookingId]);
+
+        // update vehicle status
+        const vehicleId = updateVehicleStatus.rows[0].vehicle_id
+        const vehicleStatus = "available"
+        const vehicle = await pool.query(`
+                UPDATE vehicles SET availability_status = $1 WHERE id = $2
+            RETURNING availability_status`, [vehicleStatus, vehicleId])
+
+        const FormatResult = updateVehicleStatus.rows.map(row => ({
+            id: row.id,
+            customer_id: row.customer_id,
+            vehicle_id: row.vehicle_id,
+            rent_start_date: row.rent_start_date,
+            rent_end_date: row.rent_end_date,
+            total_price: row.total_price,
+            status: row.status,
+            vehicle: vehicle.rows[0], 
+        }
+        )
+        )
+        const result ={rows:[...FormatResult]}
+
+
+        return result
+    }
 }
 
 export const bookingsService = {

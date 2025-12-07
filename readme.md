@@ -18,5 +18,8 @@
 .modules/booking/booking.routes.ts,booking.controller.ts,booking.service.ts 
 # singup modules.
 # npm i bcryptjs => password hashing
+#npm i jsonwebtoken
+
+ npm install --save node-cron
  
             

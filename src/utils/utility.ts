@@ -58,7 +58,7 @@ const checkBookingStartDate = async (userId: string, bookingId: string) => {
 
 }
 
-// select customur 
+
 
 
 export const utility = {
@@ -66,6 +66,7 @@ export const utility = {
     totalDayCalculator,
     vehicleStatus,
     updateVehecleStatus,
-    checkBookingStartDate
+    checkBookingStartDate,
+    
 
 }

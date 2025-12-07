@@ -4,12 +4,19 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { vehiclesRoutes } from "./modules/vehicles/vehicles.routes";
 import { userRoutes } from "./modules/users/user.routes";
 import { bookingsRoutes } from "./modules/bookings/bookings.routes";
+import  cron from "node-cron"
+import autoBookingStatusUpdater from "./config/system";
 
 const app = express();
 
 app.use(express.json());
 
-initDb()
+initDb();
+
+cron.schedule('1 0 * * *',()=>{
+    autoBookingStatusUpdater();
+})
+
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Project Assignment - 2 ")

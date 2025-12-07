@@ -61,10 +61,10 @@ const getBookings = async (req: Request, res: Response) => {
         const role = req.user!.role;
 
         console.log(id)
-        
+
         const result = await bookingsService.getBookings(role, id)
 
-        if (result?.length===0) {
+        if (result?.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: "No Booking data found"
@@ -88,25 +88,47 @@ const getBookings = async (req: Request, res: Response) => {
 
 const updateBookings = async (req: Request, res: Response) => {
     try {
-        const result = await bookingsService.updateBookings(req.user!.id as string, req.params.bookingId as string, req.body.status);
+        const result = await bookingsService.updateBookings(req.user!.id as string, req.params.bookingId as string, req.body.status, req.user!.role as string);
 
-        if(result===true){
+        if (result === true) {
             return res.status(400).json({
-            success:true,
-            message:"You can cancel booking before start date only",
-            error: "Cancellation date must be before start date"
-        })
+                success: true,
+                message: "You can cancel booking before start date only",
+                error: "Cancellation date must be before start date"
+            })
         }
 
-        
-        return res.status(200).json({
-            success:true,
-            message:"Booking cancelled successfully",
-            data: result.rows[0]
-        })
+         if (result === false) {
+            return res.status(400).json({
+                success: false,
+                message: `Cutomer can mark "cancelled" only`,
+                error: `User can not mark "returned" `,
+            })
+        }
+
+        if (req.user!.role === 'customer') {
+
+            return res.status(200).json({
+                success: true,
+                message: "Booking cancelled successfully",
+                data: result!.rows[0]
+            })
+        }
+
+        if (req.user!.role === 'admin') {
+
+            return res.status(200).json({
+                success: true,
+                message: "Booking marked as returned. Vehicle is now available",
+                data: result!.rows[0]
+            })
+        }
 
 
-    } catch (error:any) {
+
+
+
+    } catch (error: any) {
         return res.status(500).json(
             {
                 success: false,

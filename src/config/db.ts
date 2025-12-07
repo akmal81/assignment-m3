@@ -42,12 +42,12 @@ const initDb = async () => {
             rent_start_date VARCHAR(100),
             rent_end_date VARCHAR(100),
             total_price INT NOT NULL,
-            status VARCHAR(20),
-            CONSTRAINT start_end_date CHECK ( rent_start_date < rent_end_date)
+            status VARCHAR(20)
         )
         `
     )
-
 };
+
+
 
 export default initDb
