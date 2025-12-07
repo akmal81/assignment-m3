@@ -5,7 +5,7 @@ It handles vehicle inventory, customer profiles, bookings, authentication,status
 
 🔗 Live API: https://assignment-m3.vercel.app/
 
-
+---
 #### ✨ Features
 
 ##### 🚘 Vehicles
@@ -37,7 +37,7 @@ It handles vehicle inventory, customer profiles, bookings, authentication,status
 - System automatically marks bookings as "returned" when rent_end_date has passed
 - Vehicle availability status is updated to available accordingly
 
-
+---
 #### 🛠️ Technology Stack 
 
 | Category       | Tech                         |
@@ -49,7 +49,7 @@ It handles vehicle inventory, customer profiles, bookings, authentication,status
 | Automation     | Node Cron                    |
 | Deployment     | Vercel   |
 
-
+---
 #### ⚙️ Installation & Setup
 
 1️⃣ Clone the Repository from github 
@@ -84,9 +84,9 @@ Front-end Developer | React | Node.js | PostgreSQL
 ---
 
 ## 📞 Contact
-- Email: your_email@example.com  
-- GitHub: https://github.com/your-username  
-- LinkedIn: https://www.linkedin.com/in/your-profile  
+- Email: akmalforu@gmail.com 
+- GitHub: https://github.com/akmal81 
+- LinkedIn: https://www.linkedin.com/in/akmalhossain/ 
 
 ---
 
