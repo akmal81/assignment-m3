@@ -17,7 +17,7 @@ It handles vehicle inventory, customer profiles, bookings, authentication,status
 
 #### 👤 Customers
 - Customer account creation and manage profile 
-- Customer info sored with password hashing
+- Customer info stored with password hashing and minimum length 6
 
 #### 📅 Bookings
 - Rent vehicle
