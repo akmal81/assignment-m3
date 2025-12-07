@@ -57,9 +57,9 @@ It handles vehicle inventory, customer profiles, bookings, authentication,status
 git clone https://github.com/akmal81/assignment-m3.git
 
 2️⃣ Install Dependencies
-
+```
 npm install
-
+```
 3️⃣ Create .env
 
     PORT=5000
@@ -67,15 +67,36 @@ npm install
     SECRET=yourSecretKey
    
 4️⃣ Build the Project
-
+```
 npm run build
-
+```
 5️⃣ Start the Server
-
+```
 npm run dev
-
+```
 
 ---
+
+
+## 📜 Live Testing email and password
+---
+
+__User Credential__
+```
+{
+"email": "admin@gmail.com",
+"password": "admin123"
+}
+```
+__User Credential__
+```
+{
+"email": "customer@gmail.com",
+"password": "customer123"
+}
+```
+---
+
 
 ## 📌 Author
 **Akmal Hossain**  
