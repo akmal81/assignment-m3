@@ -1,7 +1,4 @@
-// auto updater
-
 import { pool } from "./db";
-
 
 const autoBookingStatusUpdater = async () => {
     const endDates = await pool.query(`SELECT vehicle_id, rent_end_date FROM bookings`)
@@ -13,12 +10,6 @@ const autoBookingStatusUpdater = async () => {
         const status = "returned";
         const  availabilityStatus ="available"
         if (newEndDate < today) {
-            // await pool.query(`
-            // UPDATE vehicles v
-            // SET availability_status = $1
-            // FROM bookings b
-            // WHERE v.id = b.vehicle_id;
-            // `, [status])
             await pool.query(`
             UPDATE bookings 
             SET status = $1

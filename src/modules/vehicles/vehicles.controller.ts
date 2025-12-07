@@ -15,8 +15,6 @@ const addNewVehicle = async (req: Request, res: Response) => {
             )
         }
 
-        
-
         const result = await vehiclesService.addNewVehicle(req.body)
 
         return res.status(201).json(
@@ -31,11 +29,11 @@ const addNewVehicle = async (req: Request, res: Response) => {
             {
                 success: false,
                 message: error.message
-
             }
         )
     }
 }
+
 
 const viewAllVehicles = async (req: Request, res: Response) => {
     try {
@@ -68,6 +66,8 @@ const viewAllVehicles = async (req: Request, res: Response) => {
         )
     }
 }
+
+
 const viewSingleVehicle = async (req: Request, res: Response) => {
 
     try {
@@ -80,7 +80,7 @@ const viewSingleVehicle = async (req: Request, res: Response) => {
                 {
                     success: false,
                     message: "No Vehicles found",
-                    error:"Vehicle id not found"
+                    error: "Vehicle id not found"
                 }
             )
         }
@@ -97,12 +97,13 @@ const viewSingleVehicle = async (req: Request, res: Response) => {
         return res.status(400).json(
             {
                 success: false,
-                message:"Some thing went wrong!!",
+                message: "Some thing went wrong!!",
                 error: error.message
             }
         )
     }
 }
+
 
 const updateVehicle = async (req: Request, res: Response) => {
     try {
@@ -128,8 +129,6 @@ const updateVehicle = async (req: Request, res: Response) => {
             }
         )
 
-
-
     } catch (error: any) {
         return res.status(400).json(
             {
@@ -146,13 +145,13 @@ const deleteVehicle = async (req: Request, res: Response) => {
         const id = req.params.vehicleId as string;
 
         const result = await vehiclesService.deleteVehicle(id);
-       
+
         if (result === true) {
             return res.status(400).json(
                 {
                     success: false,
                     message: "Vehicles cannot be deleted if they have active bookings",
-                    error:`Active bookings = bookings with status "active"`
+                    error: `Active bookings = bookings with status "active"`
                 }
             )
         }
@@ -161,7 +160,7 @@ const deleteVehicle = async (req: Request, res: Response) => {
                 {
                     success: false,
                     message: "Vehicles not found!!",
-                    error:"Invalid input"
+                    error: "Invalid input"
                 }
             )
         }
@@ -177,7 +176,7 @@ const deleteVehicle = async (req: Request, res: Response) => {
             {
                 success: false,
                 message: "Some thing went wrong",
-                error:error.message
+                error: error.message
             }
         )
     }

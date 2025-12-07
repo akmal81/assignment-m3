@@ -49,6 +49,7 @@ const viewSingleVehicles = async (id: string) => {
     return result
 }
 
+
 const updateVehicle = async (payload: Record<string, unknown>, id: string) => {
 
     const {
@@ -93,6 +94,7 @@ const deleteVehicle = async (id:string) => {
     )
     return result
 }
+
 
 export const vehiclesService = {
     addNewVehicle,

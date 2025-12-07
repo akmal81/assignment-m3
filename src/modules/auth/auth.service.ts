@@ -25,7 +25,6 @@ const singinUser = async (email: string, password: string) => {
     const matchedPwd = await bcrypt.compare(password, user.password);
     if (!matchedPwd) {
         return false
-
     }
 
     const token = jwt.sign(
@@ -43,9 +42,7 @@ const singinUser = async (email: string, password: string) => {
 
 }
 
-
 export const authService = {
     singUpNewUser,
     singinUser
-
 }

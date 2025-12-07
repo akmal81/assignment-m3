@@ -10,7 +10,6 @@ const createBooking = async (payload: Record<string, unknown>) => {
         return null
     }
 
-
     const daily_rent_price = vehicleInfo?.rows[0]?.daily_rent_price;
 
     const vehicle_name = vehicleInfo?.rows[0]?.vehicle_name;
@@ -116,7 +115,6 @@ const getBookings = async (role: string, id: string) => {
 }
 
 
-
 const updateBookings = async (userId: string, bookingId: string, status: string, role: string) => {
 
 if (status !== "cancelled" && role === "customer") {
@@ -165,7 +163,6 @@ return false
         )
         )
         const result ={rows:[...FormatResult]}
-
 
         return result
     }

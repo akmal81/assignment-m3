@@ -7,6 +7,7 @@ const getAllUsers = async () => {
     return result
 }
 
+
 const updateUser = async (payload: Record<string, unknown>, id: string) => {
 
     const { name, email, phone, role } = payload;

@@ -18,7 +18,6 @@ const singUpNewUser = async (req: Request, res: Response) => {
             }
         }
 
-        // check password length
         if (req.body.password.length < 6) {
             return res.status(400).json(
                 {
@@ -36,7 +35,6 @@ const singUpNewUser = async (req: Request, res: Response) => {
                 }
             )
         }
-
 
         const result = await authService.singUpNewUser(req.body)
 
@@ -65,10 +63,6 @@ const singinUser = async (req: Request, res: Response) => {
         const { email, password } = req.body
         const result = await authService.singinUser(email, password);
 
-
-
-
-
         if (result === null) {
             return res.status(400).json(
                 {
@@ -88,7 +82,6 @@ const singinUser = async (req: Request, res: Response) => {
             )
 
         }
-
 
         return res.status(200).json(
             {

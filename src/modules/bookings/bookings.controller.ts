@@ -5,7 +5,6 @@ import { pool } from "../../config/db"
 const createBooking = async (req: Request, res: Response) => {
 
     try {
-
         const result = await bookingsService.createBooking(req.body)
 
         if (result === null) {
@@ -98,7 +97,7 @@ const updateBookings = async (req: Request, res: Response) => {
             })
         }
 
-         if (result === false) {
+        if (result === false) {
             return res.status(400).json({
                 success: false,
                 message: `Cutomer can mark "cancelled" only`,
@@ -123,10 +122,6 @@ const updateBookings = async (req: Request, res: Response) => {
                 data: result!.rows[0]
             })
         }
-
-
-
-
 
     } catch (error: any) {
         return res.status(500).json(
